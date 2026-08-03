@@ -1,0 +1,12 @@
+{
+  "name": "NCERT Library for IAS",
+  "short_name": "NCERT Library",
+  "description": "A premium library of NCERT books for UPSC & IAS aspirants. Read online, highlight, bookmark, take notes and let AI help you master every page.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f0",
+  "theme_color": "#0f766e",
+  "icons": [
+    { "src": "/logo.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

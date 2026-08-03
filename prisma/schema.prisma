@@ -1,0 +1,453 @@
+// NCERT Library for IAS — Prisma schema
+// SQLite (environment constraint). Enums are stored as String for portability.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Core catalogue
+// ---------------------------------------------------------------------------
+
+model Subject {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String   @default("emerald") // tailwind-ish accent name
+  icon        String?  // lucide icon name
+  sortOrder   Int      @default(0)
+  books       Book[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Language {
+  id    String @id @default(cuid())
+  name  String @unique
+  code  String @unique
+  books Book[]
+}
+
+model Book {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  author         String?
+  description    String?
+  subjectId      String
+  subject        Subject  @relation(fields: [subjectId], references: [id])
+  languageId     String
+  language       Language @relation(fields: [languageId], references: [id])
+  classNum       Int      // 6..12
+  bookType       String   @default("NEW") // NEW | OLD
+  coverImage     String?  // url or gradient seed
+  coverGradient  String?  // fallback gradient token
+  pdfUrl         String
+  pages          Int      @default(0)
+  fileSizeKb     Int      @default(0)
+  edition        String?
+  isbn           String?
+  publisher      String?
+  publishedYear  Int?
+  rating         Float    @default(0)
+  ratingCount    Int      @default(0)
+  downloadCount  Int      @default(0)
+  viewCount      Int      @default(0)
+  trending       Boolean  @default(false)
+  featured       Boolean  @default(false)
+  recentlyAdded  Boolean  @default(false)
+  allowDownload  Boolean  @default(true)
+  chapters       String?  // JSON string of TOC [{title, page}]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  bookmarks   Bookmark[]
+  progress    ReadingProgress[]
+  highlights  Highlight[]
+  notes       Note[]
+  downloads   Download[]
+  drawings    Drawing[]
+  sessions    ReadingSession[]
+  chunks      KnowledgeChunk[]
+  flashcards  Flashcard[]
+  revisionSessions RevisionSession[]
+  studyAnalytics StudyAnalytic[]
+  reviews     Review[]
+}
+
+// ---------------------------------------------------------------------------
+// User & engagement
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String?
+  avatar       String?
+  role         String   @default("USER") // USER | ADMIN
+  provider     String   @default("credentials") // credentials | google
+  bio          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  bookmarks      Bookmark[]
+  progress       ReadingProgress[]
+  highlights     Highlight[]
+  notes          Note[]
+  downloads      Download[]
+  searchHistory  SearchHistory[]
+  achievements   Achievement[]
+  drawings       Drawing[]
+  sessions       ReadingSession[]
+  readerSettings ReaderSettings?
+  noteTags       NoteTag[]
+  exports        ExportHistory[]
+  conversations  Conversation[]
+  aiMemory       AIMemory?
+  flashcards     Flashcard[]
+  revisionSessions RevisionSession[]
+  studyAnalytics StudyAnalytic[]
+  questions      QuestionHistory[]
+  reviews        Review[]
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  page      Int
+  label     String?
+  color     String   @default("amber")
+  folder    String   @default("default")
+  createdAt DateTime @default(now())
+
+  @@unique([userId, bookId, page])
+}
+
+model ReadingProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId      String
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  currentPage Int      @default(1)
+  totalPages  Int      @default(1)
+  percent     Float    @default(0)
+  scrollY     Int      @default(0)
+  timeSpentSec Int     @default(0)
+  pagesReadToday Int   @default(0)
+  streak      Int      @default(0)
+  lastReadAt  DateTime @default(now())
+
+  @@unique([userId, bookId])
+}
+
+model Highlight {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  page      Int
+  text      String
+  color     String   @default("amber") // amber|emerald|rose|violet|sky|blue|pink|orange|purple|custom
+  kind      String   @default("HIGHLIGHT") // HIGHLIGHT|UNDERLINE|STRIKETHROUGH
+  note      String?  // JSON: { rects:[{x,y,w,h}], label, category }
+  label     String?
+  category  String?  // e.g. "important", "doubt", "quote"
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  page      Int
+  content   String
+  x         Float    @default(0)
+  y         Float    @default(0)
+  pinned    Boolean  @default(false)
+  color     String   @default("amber")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tags      NoteTagLink[]
+}
+
+model Download {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, bookId])
+}
+
+model SearchHistory {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  query     String
+  createdAt DateTime @default(now())
+}
+
+model Achievement {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       String   // FIRST_BOOK | TEN_BOOKS | READER_100 | etc
+  label      String
+  icon       String?
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, type])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// World-class reader extensions
+// ---------------------------------------------------------------------------
+
+/// Freehand drawings + shape annotations (rectangles, arrows, lines, ink)
+model Drawing {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  page      Int
+  tool      String   // PEN | RECTANGLE | ARROW | LINE | TEXT_BOX | HIGHLIGHTER
+  color     String   @default("#0f766e")
+  strokeWidth Float  @default(2)
+  data      String   // JSON: points [{x,y}] or shape coords
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// A discrete reading session (start/end/duration) for analytics & streaks
+model ReadingSession {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId      String
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+  durationSec Int      @default(0)
+  startPage   Int      @default(1)
+  endPage     Int      @default(1)
+  pagesRead   Int      @default(0)
+}
+
+/// Per-user reader preferences (zoom, theme, layout, sidebar, autosave...)
+model ReaderSettings {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme           String   @default("light") // light|dark|sepia|paper|night|contrast
+  zoom            Float    @default(1.2)
+  layout          String   @default("continuous") // continuous|single|two
+  pageSpacing     Int      @default(16)
+  readingDirection String  @default("ltr") // ltr|rtl
+  pageTransition  String   @default("slide") // none|slide|fade
+  autoSaveSec     Int      @default(5)
+  defaultSidebar  String   @default("thumbnails")
+  leftSidebarOpen Boolean  @default(true)
+  rightSidebarOpen Boolean @default(false)
+  updatedAt       DateTime @updatedAt
+}
+
+/// Tags for notes (per user)
+model NoteTag {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  color     String   @default("emerald")
+  notes     NoteTagLink[]
+  createdAt DateTime @default(now())
+
+  @@unique([userId, name])
+}
+
+model NoteTagLink {
+  id     String @id @default(cuid())
+  noteId String
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    NoteTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, tagId])
+}
+
+/// Audit of export operations (notes/highlights/bookmarks exported as md/txt/json/pdf)
+model ExportHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String?
+  kind      String   // notes|highlights|bookmarks|annotations
+  format    String   // md|txt|json|pdf|docx
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// AI Study Assistant — knowledge base, RAG, conversations, memory
+// ---------------------------------------------------------------------------
+
+/// A searchable text chunk extracted from a book PDF (the vector store).
+/// Stores TF-IDF tokens + term frequencies for hybrid retrieval.
+model KnowledgeChunk {
+  id          String   @id @default(cuid())
+  bookId      String
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  chunkIndex  Int      // ordinal within the book
+  page        Int      // PDF page number (1-based)
+  chapter     String?  // detected chapter title
+  section     String?  // detected section/heading
+  heading     String?  // nearest heading above this chunk
+  text        String   // the chunk text (paragraph or ~500 chars)
+  tokens      String   // JSON: tokenized terms for TF-IDF
+  termFreq    String   // JSON: {term: freq} for cosine similarity
+  chunkType   String   @default("paragraph") // paragraph|heading|definition|table|exercise
+  createdAt   DateTime @default(now())
+
+  @@index([bookId])
+  @@index([page])
+}
+
+/// A knowledge-graph entity extracted from content (person, place, event, concept, law, date).
+model KnowledgeEntity {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // person|place|event|date|concept|law|article|organization|term
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@unique([name, type])
+}
+
+/// Conversation sessions (chat history).
+model Conversation {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String?  // context: which book the conversation started in
+  title     String   @default("New conversation")
+  messages  String   // JSON array of {role, content, citations, createdAt}
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Per-user AI memory (preferences, weak topics, style).
+model AIMemory {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preferredStyle  String   @default("detailed") // concise|detailed|simple|exam-focused
+  difficultyLevel String   @default("intermediate") // beginner|intermediate|advanced
+  weakTopics      String   @default("[]") // JSON array of topic strings
+  strongTopics    String   @default("[]")
+  recentQuestions String   @default("[]") // JSON array of recent question strings
+  upscMode        Boolean  @default(true)
+  language        String   @default("en")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+/// Saved flashcards generated by the AI.
+model Flashcard {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String?
+  book      Book?    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  page      Int?
+  front     String
+  back      String
+  deck      String   @default("default") // group flashcards into decks
+  reviewed  Int      @default(0)
+  correct   Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+/// Revision sessions (quick revision, cheat sheets, etc.).
+model RevisionSession {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId     String?
+  book       Book?    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  type       String   // quick|5min|10min|one-page|cheat-sheet|last-minute
+  content    String   // the generated revision content (markdown)
+  createdAt  DateTime @default(now())
+}
+
+/// Study analytics — tracks what the user studies.
+model StudyAnalytic {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId      String?
+  book        Book?    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  event       String   // question|summary|flashcard|mcq|revision|chat
+  query       String?  // the user's question or action
+  retrievalCount Int   @default(0) // how many chunks were retrieved
+  hasCitations Boolean @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([event])
+}
+
+/// Search/query history for analytics + "recent questions".
+model QuestionHistory {
+  id        String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  query      String
+  bookId     String?
+  answer     String   @default("")
+  citations  String   @default("[]") // JSON
+  helpful    Boolean?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// Text-based book reviews (complements star ratings).
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  rating    Int      // 1-5 stars
+  title     String?
+  content   String
+  helpful   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, bookId])
+  @@index([bookId])
+}

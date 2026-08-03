@@ -1,0 +1,358 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ============================================================
+   NCERT Library for IAS — Design Tokens
+   Warm scholarly palette · emerald accent · paper/ink neutrals
+   ============================================================ */
+:root {
+  --radius: 0.75rem;
+
+  /* Paper-warm light theme */
+  --background: oklch(0.985 0.006 95);
+  --foreground: oklch(0.21 0.012 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.012 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.012 60);
+
+  /* Emerald primary — knowledge & growth */
+  --primary: oklch(0.46 0.11 162);
+  --primary-foreground: oklch(0.985 0.005 95);
+
+  --secondary: oklch(0.96 0.008 95);
+  --secondary-foreground: oklch(0.26 0.012 60);
+  --muted: oklch(0.96 0.006 95);
+  --muted-foreground: oklch(0.5 0.01 60);
+  --accent: oklch(0.94 0.02 95);
+  --accent-foreground: oklch(0.26 0.012 60);
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.008 80);
+  --input: oklch(0.92 0.006 80);
+  --ring: oklch(0.46 0.11 162);
+
+  /* Chart / subject accents — warm + earthy, no indigo/blue primaries */
+  --chart-1: oklch(0.62 0.14 45);     /* amber */
+  --chart-2: oklch(0.55 0.12 162);    /* emerald */
+  --chart-3: oklch(0.58 0.18 16);     /* rose */
+  --chart-4: oklch(0.52 0.13 305);    /* fuchsia */
+  --chart-5: oklch(0.6 0.11 80);      /* gold */
+
+  --sidebar: oklch(0.98 0.005 95);
+  --sidebar-foreground: oklch(0.21 0.012 60);
+  --sidebar-primary: oklch(0.46 0.11 162);
+  --sidebar-primary-foreground: oklch(0.985 0.005 95);
+  --sidebar-accent: oklch(0.94 0.02 95);
+  --sidebar-accent-foreground: oklch(0.26 0.012 60);
+  --sidebar-border: oklch(0.9 0.008 80);
+  --sidebar-ring: oklch(0.46 0.11 162);
+
+  /* Reader-specific surfaces */
+  --reader-bg: oklch(0.965 0.008 90);
+  --reader-surface: oklch(1 0 0);
+  --reader-ink: oklch(0.2 0.012 60);
+}
+
+.dark {
+  /* Deep charcoal ink — Kindle-night vibe */
+  --background: oklch(0.17 0.008 60);
+  --foreground: oklch(0.94 0.005 95);
+  --card: oklch(0.21 0.01 60);
+  --card-foreground: oklch(0.94 0.005 95);
+  --popover: oklch(0.21 0.01 60);
+  --popover-foreground: oklch(0.94 0.005 95);
+
+  --primary: oklch(0.72 0.13 162);
+  --primary-foreground: oklch(0.16 0.01 60);
+
+  --secondary: oklch(0.26 0.01 60);
+  --secondary-foreground: oklch(0.94 0.005 95);
+  --muted: oklch(0.25 0.008 60);
+  --muted-foreground: oklch(0.66 0.008 70);
+  --accent: oklch(0.3 0.012 60);
+  --accent-foreground: oklch(0.94 0.005 95);
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.72 0.13 162);
+
+  --chart-1: oklch(0.7 0.15 45);
+  --chart-2: oklch(0.7 0.14 162);
+  --chart-3: oklch(0.66 0.18 16);
+  --chart-4: oklch(0.66 0.16 305);
+  --chart-5: oklch(0.72 0.12 80);
+
+  --sidebar: oklch(0.19 0.009 60);
+  --sidebar-foreground: oklch(0.94 0.005 95);
+  --sidebar-primary: oklch(0.72 0.13 162);
+  --sidebar-primary-foreground: oklch(0.16 0.01 60);
+  --sidebar-accent: oklch(0.28 0.012 60);
+  --sidebar-accent-foreground: oklch(0.94 0.005 95);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.72 0.13 162);
+
+  --reader-bg: oklch(0.14 0.006 60);
+  --reader-surface: oklch(0.2 0.008 60);
+  --reader-ink: oklch(0.92 0.005 95);
+}
+
+/* Sepia reader variant */
+.reader-sepia {
+  --reader-bg: oklch(0.95 0.03 75);
+  --reader-surface: oklch(0.97 0.025 80);
+  --reader-ink: oklch(0.27 0.02 55);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv01", "cv03";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: oklch(0.46 0.11 162 / 0.22);
+  }
+}
+
+/* ============================================================
+   Custom scrollbar
+   ============================================================ */
+.scroll-elegant {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.7 0.02 80 / 0.5) transparent;
+}
+.scroll-elegant::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-elegant::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-elegant::-webkit-scrollbar-thumb {
+  background: oklch(0.7 0.02 80 / 0.4);
+  border-radius: 999px;
+}
+.scroll-elegant::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.6 0.04 80 / 0.7);
+}
+.dark .scroll-elegant::-webkit-scrollbar-thumb {
+  background: oklch(0.5 0.01 60 / 0.5);
+}
+.dark .scroll-elegant::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.6 0.01 60 / 0.7);
+}
+
+/* ============================================================
+   Utility helpers
+   ============================================================ */
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Subtle grain texture for premium paper feel */
+.paper-grain {
+  background-image: radial-gradient(oklch(0.5 0.02 80 / 0.025) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+/* Glass surface */
+.glass {
+  background: oklch(1 0 0 / 0.7);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+.dark .glass {
+  background: oklch(0.21 0.01 60 / 0.7);
+}
+
+/* Premium soft shadow */
+.shadow-soft {
+  box-shadow:
+    0 1px 2px oklch(0.3 0.02 60 / 0.04),
+    0 8px 24px oklch(0.3 0.02 60 / 0.06);
+}
+.dark .shadow-soft {
+  box-shadow:
+    0 1px 2px oklch(0 0 0 / 0.3),
+    0 8px 24px oklch(0 0 0 / 0.4);
+}
+.shadow-lift {
+  box-shadow:
+    0 1px 2px oklch(0.3 0.02 60 / 0.05),
+    0 12px 40px oklch(0.3 0.02 60 / 0.12);
+}
+.dark .shadow-lift {
+  box-shadow:
+    0 1px 2px oklch(0 0 0 / 0.4),
+    0 12px 40px oklch(0 0 0 / 0.5);
+}
+
+/* Highlight annotation colors (text layer overlays) */
+.hl-amber  { background: oklch(0.85 0.13 80 / 0.45); }
+.hl-emerald{ background: oklch(0.82 0.13 162 / 0.4); }
+.hl-rose   { background: oklch(0.8 0.13 16 / 0.4); }
+.hl-violet { background: oklch(0.8 0.13 305 / 0.4); }
+.hl-sky    { background: oklch(0.82 0.1 220 / 0.4); }
+
+/* Animated gradient sheen for hero accents */
+@keyframes sheen {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-sheen {
+  background-size: 200% 200%;
+  animation: sheen 8s ease infinite;
+}
+
+/* Book spine / card lift hover */
+.book-lift {
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s ease;
+  transform-style: preserve-3d;
+}
+.book-lift:hover {
+  transform: translateY(-6px) rotateX(2deg);
+}
+
+/* Marquee for trending strip */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Page-turn flip */
+@keyframes flip-in {
+  from { opacity: 0; transform: perspective(1200px) rotateY(-8deg); }
+  to { opacity: 1; transform: perspective(1200px) rotateY(0); }
+}
+.animate-flip-in {
+  animation: flip-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Soft pulse for live/active dots */
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.15); }
+}
+.animate-soft-pulse {
+  animation: soft-pulse 2.4s ease-in-out infinite;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   PDF.js text layer (for selectable text + highlights)
+   ============================================================ */
+.pdf-text-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  line-height: 1;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  z-index: 5;
+}
+.pdf-text-layer span,
+.pdf-text-layer br {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+.pdf-text-layer ::selection {
+  background: oklch(0.62 0.14 45 / 0.35);
+}
+.pdf-text-layer .highlight-mark {
+  background-color: transparent !important;
+}
+
+/* Highlight rectangles overlay */
+.pdf-highlight-rect {
+  position: absolute;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  border-radius: 2px;
+}
+.dark .pdf-highlight-rect {
+  mix-blend-mode: screen;
+  opacity: 0.6;
+}
+
+/* Sticky note pin */
+.pdf-note-pin {
+  position: absolute;
+  z-index: 20;
+  cursor: pointer;
+}
+

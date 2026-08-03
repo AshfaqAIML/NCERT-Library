@@ -1,0 +1,13 @@
+# robots.txt — NCERT Library for IAS
+User-agent: *
+Allow: /
+Disallow: /api/admin/
+Disallow: /api/auth/
+Disallow: /api/profile
+Disallow: /api/books/*/bookmarks
+Disallow: /api/books/*/highlights
+Disallow: /api/books/*/notes
+Disallow: /api/books/*/progress
+Disallow: /api/books/*/download
+
+Sitemap: https://ncert-library-for-ias.app/sitemap.xml
