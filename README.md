@@ -4,6 +4,8 @@
 
 Built with Next.js 16, TypeScript, Tailwind CSS 4, shadcn/ui, Prisma, PDF.js, Framer Motion, and z-ai-web-dev-sdk.
 
+> **Live Demo:** [https://ncert-library.vercel.app](https://ncert-library.vercel.app/) — browse and read the full NCERT library online
+
 ---
 
 ## Table of Contents
@@ -21,6 +23,7 @@ Built with Next.js 16, TypeScript, Tailwind CSS 4, shadcn/ui, Prisma, PDF.js, Fr
 - [PDF Reader Features](#pdf-reader-features)
 - [Admin Panel](#admin-panel)
 - [Deployment](#deployment)
+- [Live Demo](#live-demo)
 - [Demo Accounts](#demo-accounts)
 - [Scripts](#scripts)
 - [Environment Variables](#environment-variables)
@@ -736,6 +739,14 @@ To use PostgreSQL instead of SQLite in production:
    ```
 2. Set `DATABASE_URL` to your PostgreSQL connection string
 3. Run `bun run db:push`
+
+---
+
+## Live Demo
+
+Try the production deployment:
+
+**<https://ncert-library.vercel.app/>**
 
 ---
 
