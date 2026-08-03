@@ -1,12 +1,11 @@
 // NCERT Library for IAS — Prisma schema
-// SQLite (environment constraint). Enums are stored as String for portability.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
