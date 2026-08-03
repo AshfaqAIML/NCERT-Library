@@ -331,13 +331,18 @@ function CanvasSlot({ canvas, width, height }: { canvas: HTMLCanvasElement; widt
   useEffect(() => {
     const host = ref.current;
     if (!host) return;
-    // Clone the canvas into our host so we don't lose it when cache recycles
+    // Copy the canvas into our host (cloneNode would produce a BLANK canvas —
+    // pixel data is not part of the DOM and is never cloned). Copy the bitmap
+    // instead so the page stays visible even after the cache recycles the source.
     host.innerHTML = "";
-    const clone = canvas.cloneNode(true) as HTMLCanvasElement;
-    clone.style.width = `${width}px`;
-    clone.style.height = `${height}px`;
-    clone.style.display = "block";
-    host.appendChild(clone);
+    const copy = document.createElement("canvas");
+    copy.width = canvas.width;
+    copy.height = canvas.height;
+    copy.getContext("2d")!.drawImage(canvas, 0, 0);
+    copy.style.width = `${width}px`;
+    copy.style.height = `${height}px`;
+    copy.style.display = "block";
+    host.appendChild(copy);
   }, [canvas, width, height]);
   return <div ref={ref} className="absolute inset-0" />;
 }
