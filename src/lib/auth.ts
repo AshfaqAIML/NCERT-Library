@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { db } from "./db";
+import { handle, ok, err } from "./http";
 import type { SessionUser } from "./types";
+
+export { handle, ok, err };
 
 // Lightweight signed-cookie session for the demo platform.
 // (Production would use NextAuth/JWT with proper secrets.)

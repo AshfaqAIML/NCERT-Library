@@ -56,3 +56,5 @@ server.log
 notepad .gitignore
 ncert-books/
  
+.vercel
+.env*
