@@ -58,3 +58,5 @@ ncert-books/
  
 .vercel
 .env*
+package-lock.json
+

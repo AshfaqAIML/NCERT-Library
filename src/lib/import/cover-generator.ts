@@ -60,9 +60,12 @@ function buildCoverSvg(title: string, subject: string, classNum?: number): strin
   const [c1, c2] = gradients[subject] || ["#10b981", "#0891b2"];
 
   // Truncate title for display
-  const displayTitle = title.length > 40 ? title.slice(0, 37) + "…" : title;
+  const displayTitle = (title.length > 40 ? title.slice(0, 37) + "…" : title);
   const subjectLabel = subject.toUpperCase();
   const classLabel = classNum ? `CLASS ${classNum}` : "";
+
+  const esc = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
   return `<svg width="400" height="560" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -78,9 +81,9 @@ function buildCoverSvg(title: string, subject: string, classNum?: number): strin
   <rect width="400" height="560" fill="url(#dots)"/>
   <rect x="0" y="0" width="12" height="560" fill="black" opacity="0.2"/>
   <rect x="0" y="0" width="120" height="560" fill="white" opacity="0.05"/>
-  <text x="30" y="50" font-family="Georgia, serif" font-size="13" font-weight="bold" fill="white" opacity="0.9" letter-spacing="2">${subjectLabel}</text>
-  <text x="30" y="70" font-family="Georgia, serif" font-size="11" fill="white" opacity="0.7" letter-spacing="1.5">${classLabel}</text>
-  <text x="30" y="480" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="white" opacity="0.95">${wrapText(displayTitle, 32)}</text>
+  <text x="30" y="50" font-family="Georgia, serif" font-size="13" font-weight="bold" fill="white" opacity="0.9" letter-spacing="2">${esc(subjectLabel)}</text>
+  <text x="30" y="70" font-family="Georgia, serif" font-size="11" fill="white" opacity="0.7" letter-spacing="1.5">${esc(classLabel)}</text>
+  <text x="30" y="480" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="white" opacity="0.95">${esc(wrapText(displayTitle, 32))}</text>
   <text x="30" y="530" font-family="Georgia, serif" font-size="10" fill="white" opacity="0.6" letter-spacing="1">NCERT · FOR IAS</text>
 </svg>`;
 }
